@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>MaxSprint 13</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700;800&family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#E6E6E6; --bg2:#D8D8D8; --card:#FFFFFF; --card2:#EFEFEF;
+  --border:#C8C8C8; --text:#111; --text2:#444; --muted:#888;
+  --black:#0A0A0A; --y:#FFD600; --y2:#FFC000; --yl:rgba(255,214,0,.14);
+  --yb:rgba(255,214,0,.35); --red:#C62828; --green:#2E7D32; --blue:#1565C0;
+  --r:14px; --sh:0 2px 10px rgba(0,0,0,.09);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;min-height:100vh;overscroll-behavior:none}
+
+/* ── LOGIN ── */
+#login{display:flex;flex-direction:column;align-items:center;padding:28px 16px 40px}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:62px;color:var(--black);letter-spacing:3px;line-height:1;text-align:center}
+.logo span{color:var(--y)}
+.tagline{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);font-weight:700;text-align:center;margin-bottom:24px;margin-top:4px}
+.lcard{background:var(--card);border-radius:18px;padding:22px;width:100%;max-width:500px;border:1px solid var(--border);box-shadow:0 6px 28px rgba(0,0,0,.12)}
+.lsec{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);font-weight:800;margin-bottom:12px}
+.lgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.lg1{grid-template-columns:1fr}
+.fg label{display:block;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--text2);margin-bottom:4px}
+.fg input,.fg select{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:9px;color:var(--text);font-family:'Barlow',sans-serif;font-size:16px;padding:10px 11px;outline:none;transition:border-color .15s}
+.fg input:focus{border-color:var(--y)}
+.fg .u{font-size:10px;color:var(--muted);margin-top:3px;font-weight:600}
+.ldiv{height:1px;background:var(--border);margin:16px 0}
+.sinput{background:var(--bg);border-radius:11px;padding:13px;border:1px solid var(--border);margin-bottom:9px}
+.sinput .sl{font-size:12px;font-weight:700;color:var(--text2);margin-bottom:9px;letter-spacing:.3px}
+.preview{background:var(--yl);border:1.5px solid var(--yb);border-radius:11px;padding:14px;margin-top:12px;display:none}
+.prev-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid rgba(255,214,0,.25)}
+.prev-row:last-of-type{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.prev-dist{font-size:12px;font-weight:800;color:var(--black)}
+.prev-right{text-align:right}
+.prev-curr{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--black);line-height:1}
+.prev-goal{font-size:11px;font-weight:700;color:var(--green);margin-top:1px}
+.prev-grp{font-size:10px;color:var(--muted);margin-top:1px;font-weight:600}
+.prev-note{font-size:11px;color:var(--text2);margin-top:10px;line-height:1.6;border-top:1px solid rgba(255,214,0,.25);padding-top:8px}
+.lbtn{width:100%;background:var(--y);color:var(--black);border:none;border-radius:11px;font-family:'Barlow',sans-serif;font-weight:800;font-size:17px;padding:15px;cursor:pointer;margin-top:16px;box-shadow:0 4px 14px rgba(255,214,0,.3);letter-spacing:.3px;transition:transform .1s}
+.lbtn:active{transform:scale(.98)}
+.ep-wrap{margin-top:14px}
+.ep-lbl{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px}
+.pchip{display:inline-flex;align-items:center;gap:7px;background:var(--bg);border:1.5px solid var(--border);border-radius:100px;padding:7px 13px;margin:0 5px 5px 0;cursor:pointer;font-size:12px;font-weight:700;color:var(--text);transition:all .15s}
+.pchip:hover{border-color:var(--y);background:var(--yl)}
+.pchip-del{background:none;border:none;color:var(--muted);font-size:14px;cursor:pointer;padding:0;line-height:1}
+
+/* ── APP ── */
+#app{display:none;min-height:100vh}
+
+/* HEADER */
+.hdr{background:#D0D0D0;padding:14px 16px 0;position:relative;overflow:hidden;border-bottom:3px solid var(--black)}
+.hdr::before{content:'';position:absolute;top:-70px;right:-70px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(255,214,0,.18) 0%,transparent 70%);pointer-events:none}
+.hdr-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.hdr-name{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--black);letter-spacing:1px}
+.hdr-name span{color:var(--black);font-size:20px;opacity:.7}
+.hdr-right{display:flex;gap:7px;align-items:center}
+.wsel{background:#fff;border:1.5px solid var(--border);border-radius:8px;color:var(--black);font-family:'Barlow',sans-serif;font-size:12px;padding:6px 10px;outline:none;font-weight:700}
+.wsel option{background:#fff;color:var(--black)}
+.hdr-logout{background:#fff;border:1.5px solid var(--border);border-radius:8px;color:var(--text2);font-size:12px;font-family:'Barlow',sans-serif;font-weight:700;padding:6px 11px;cursor:pointer;letter-spacing:.3px}
+
+/* SPEED PANELS – 3 columns for 10m/20m/50m */
+.spd-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;padding:0 14px}
+.spd-box{background:#fff;border:1.5px solid var(--border);border-radius:11px;padding:11px 10px;position:relative;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.spd-box::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--y)}
+.spd-dist{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:4px}
+.spd-target{font-family:'Bebas Neue',sans-serif;font-size:34px;color:var(--black);line-height:1}
+.spd-tlbl{font-size:8px;color:var(--muted);font-weight:600;letter-spacing:.8px;text-transform:uppercase;margin-bottom:6px}
+.spd-entries{margin-top:3px}
+.spd-entry{display:flex;justify-content:space-between;align-items:center;padding:3px 0;border-bottom:1px solid var(--border)}
+.spd-entry:last-child{border-bottom:none}
+.spd-edate{font-size:9px;color:var(--muted)}
+.spd-eval{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;color:var(--text2)}
+.spd-edelta{font-size:9px;font-weight:800}
+.spd-edelta.better{color:#2E7D32}
+.spd-edelta.worse{color:#C62828}
+.spd-badge{font-size:9px;font-weight:800;margin-top:5px;border-radius:5px;padding:2px 6px;display:inline-block;border:1px solid}
+.spd-pot{font-size:9px;color:var(--muted);margin-top:3px;border-top:1px solid var(--border);padding-top:4px}
+
+.hdr-prog{padding:12px 14px 14px}
+.hdr-prog-row{display:flex;justify-content:space-between;margin-bottom:4px;font-size:10px;font-weight:800;letter-spacing:.5px}
+.hdr-prog-row span:first-child{color:var(--text2)}
+.hdr-prog-row span:last-child{color:var(--black);background:var(--y);padding:1px 7px;border-radius:4px}
+.hdr-prog-bg{background:var(--border);border-radius:100px;height:5px;overflow:hidden}
+.hdr-prog-fill{height:100%;border-radius:100px;background:var(--y);transition:width .7s ease;box-shadow:0 0 0 1px rgba(0,0,0,.15)}
+
+.recbtn-row{padding:0 14px 14px;display:flex;gap:7px}
+.rbtn{flex:1;background:var(--black);border:none;border-radius:9px;color:var(--y);font-family:'Barlow',sans-serif;font-weight:800;font-size:12px;padding:10px 8px;cursor:pointer;text-align:center;transition:all .15s;letter-spacing:.3px}
+.rbtn:hover{background:#222}
+
+/* TABS */
+.tabs{background:var(--bg);display:flex;gap:5px;padding:11px 14px 0;overflow-x:auto;scrollbar-width:none;border-top:2px solid var(--black)}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex-shrink:0;background:var(--card);border:1.5px solid var(--border);border-radius:100px;padding:8px 14px;font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;transition:all .15s;white-space:nowrap}
+.tab.active{background:var(--black);color:var(--y);border-color:var(--black)}
+
+/* PANELS */
+.panel{display:none;padding:13px;flex:1}
+.panel.active{display:block}
+.ptitle{font-family:'Bebas Neue',sans-serif;font-size:27px;letter-spacing:1px;color:var(--black);margin-bottom:2px}
+.psub{font-size:9px;color:var(--muted);margin-bottom:13px;letter-spacing:1.5px;text-transform:uppercase;font-weight:800}
+
+/* DAY BUTTONS */
+.dayrow{display:flex;gap:5px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;margin-bottom:13px}
+.dayrow::-webkit-scrollbar{display:none}
+.daybtn{flex-shrink:0;background:var(--card);border:1.5px solid var(--border);border-radius:9px;padding:7px 10px;cursor:pointer;text-align:center;min-width:56px;transition:all .15s}
+.daybtn.active{background:var(--black);border-color:var(--black)}
+.daybtn .dn{font-size:10px;font-weight:800;text-transform:uppercase;color:var(--muted);letter-spacing:.5px}
+.daybtn.active .dn{color:var(--y)}
+.daybtn .di{font-size:11px;margin-top:1px}
+
+/* UNIT HEADER */
+.uhdr{background:var(--black);border-radius:13px;padding:14px;margin-bottom:11px;display:flex;align-items:center;gap:12px}
+.uico{width:46px;height:46px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:21px;flex-shrink:0}
+.uico.y{background:rgba(255,214,0,.15)} .uico.r{background:rgba(198,40,40,.14)} .uico.b{background:rgba(21,101,192,.14)} .uico.g{background:rgba(46,125,50,.12)}
+.utitle{font-family:'Barlow Condensed',sans-serif;font-size:21px;font-weight:800;color:#fff;letter-spacing:.3px}
+.umeta{font-size:10px;color:rgba(255,255,255,.4);margin-top:2px}
+
+/* FOCUS BADGE */
+.focus-row{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+.fbadge{font-size:10px;font-weight:800;padding:4px 10px;border-radius:100px;letter-spacing:.5px}
+.fbadge.antritt{background:rgba(21,101,192,.12);color:var(--blue);border:1px solid rgba(21,101,192,.25)}
+.fbadge.maxspeed{background:rgba(198,40,40,.1);color:var(--red);border:1px solid rgba(198,40,40,.2)}
+.fbadge.both{background:rgba(255,214,0,.12);color:#8B6800;border:1px solid var(--yb)}
+
+/* PHASE */
+.plbl{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--y2);font-weight:800;margin:13px 0 7px;display:flex;align-items:center;gap:8px}
+.plbl::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* EXERCISE ROW */
+.exrow{background:var(--card);border-radius:11px;padding:12px 11px;margin-bottom:6px;display:flex;align-items:center;gap:9px;border:1.5px solid var(--border);box-shadow:var(--sh);transition:border-color .15s}
+.exrow.done{opacity:.42}
+.exrow.done .exname{text-decoration:line-through}
+.excheck{width:27px;height:27px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px;cursor:pointer;background:var(--bg);transition:all .2s}
+.exrow.done .excheck{background:var(--y);border-color:var(--y);color:var(--black)}
+.exinfo{flex:1;min-width:0}
+.exname{font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text)}
+.exsets{font-size:10px;color:var(--muted);margin-top:2px}
+.exlinks{display:flex;gap:4px;flex-shrink:0}
+.exlink{display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:8px;text-decoration:none;font-size:14px;cursor:pointer;border:none;transition:background .15s}
+.exlink.yt{background:rgba(198,40,40,.11)}
+.exlink.tip{background:var(--yl);font-size:11px;font-weight:800;color:var(--black)}
+.solo-tag{display:inline-block;font-size:8px;font-weight:800;color:var(--blue);background:rgba(21,101,192,.08);border:1px solid rgba(21,101,192,.2);border-radius:4px;padding:1px 5px;margin-left:5px;letter-spacing:.5px;vertical-align:middle}
+
+/* ── SHOULDER CHECK TRAINER ── */
+.sc-trainer{background:var(--black);border-radius:13px;overflow:hidden;margin-bottom:11px}
+.sc-trainer-hdr{padding:14px;display:flex;align-items:center;gap:10px}
+.sc-trainer-title{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;color:#fff}
+.sc-trainer-sub{font-size:10px;color:rgba(255,255,255,.4);margin-top:2px}
+.sc-screen{background:#0d0d0d;min-height:220px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;position:relative}
+.sc-instruction{font-size:13px;color:rgba(255,255,255,.5);text-align:center;margin-bottom:16px;line-height:1.5}
+.sc-signal{font-size:80px;transition:all .3s;text-align:center;line-height:1}
+.sc-signal.show{animation:pop .2s ease}
+@keyframes pop{0%{transform:scale(0.5);opacity:0}100%{transform:scale(1);opacity:1}}
+.sc-cue{font-family:'Bebas Neue',sans-serif;font-size:52px;color:var(--y);text-align:center;letter-spacing:2px;min-height:60px;display:flex;align-items:center;justify-content:center}
+.sc-counter{font-size:18px;color:rgba(255,255,255,.3);font-family:'Bebas Neue',sans-serif;letter-spacing:1px}
+.sc-stats{display:flex;gap:16px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.sc-stat{text-align:center}
+.sc-stat-val{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--y)}
+.sc-stat-lbl{font-size:9px;color:rgba(255,255,255,.3);letter-spacing:1px;text-transform:uppercase;font-weight:700}
+.sc-controls{padding:12px 14px;display:flex;gap:8px}
+.sc-start-btn{flex:1;background:var(--y);color:var(--black);border:none;border-radius:10px;font-family:'Barlow',sans-serif;font-weight:800;font-size:14px;padding:12px;cursor:pointer;letter-spacing:.3px;transition:transform .1s}
+.sc-start-btn:active{transform:scale(.97)}
+.sc-start-btn.stop{background:rgba(198,40,40,.15);color:var(--red);border:1.5px solid rgba(198,40,40,.3)}
+.sc-yt-link{display:flex;align-items:center;gap:8px;padding:10px 14px;border-top:1px solid rgba(255,255,255,.06);text-decoration:none}
+.sc-yt-link-text{font-size:11px;color:rgba(255,255,255,.4);font-weight:600}
+.sc-yt-link-badge{background:var(--red);color:#fff;font-size:9px;font-weight:800;padding:2px 7px;border-radius:4px;flex-shrink:0}
+
+/* REST CARD */
+.rest-card{background:var(--card);border-radius:var(--r);padding:26px 18px;border:1.5px solid var(--border);box-shadow:var(--sh);text-align:center}
+
+/* INFO CARD */
+.icard{background:var(--card);border-radius:var(--r);padding:15px;border:1.5px solid var(--border);box-shadow:var(--sh);margin-bottom:10px}
+
+/* MODAL */
+.ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:300;align-items:flex-end;justify-content:center;padding:10px}
+.ov.open{display:flex}
+.modal{background:var(--card);border-radius:22px 22px 13px 13px;width:100%;max-width:600px;padding:20px;border:1.5px solid var(--border);max-height:80vh;overflow-y:auto;animation:su .25s ease;box-shadow:0 8px 32px rgba(0,0,0,.18)}
+@keyframes su{from{transform:translateY(50px);opacity:0}to{transform:translateY(0);opacity:1}}
+.mcls{float:right;background:var(--bg);border:none;color:var(--text);border-radius:50%;width:32px;height:32px;font-size:17px;cursor:pointer;line-height:32px;text-align:center}
+.mtitle{font-family:'Bebas Neue',sans-serif;font-size:26px;color:var(--black);margin-bottom:2px}
+.mex{font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;font-weight:700;margin-bottom:13px;border-bottom:1.5px solid var(--border);padding-bottom:9px}
+.titem{display:flex;gap:9px;margin-bottom:10px;align-items:flex-start}
+.tdot{width:6px;height:6px;border-radius:50%;background:var(--y2);margin-top:5px;flex-shrink:0}
+.ttext{font-size:13px;line-height:1.6;color:var(--text)}
+.tkey{font-weight:800;color:var(--black)}
+.twarn{background:#FFF3E0;border-left:3px solid #E65100;border-radius:0 8px 8px 0;padding:9px 12px;font-size:12px;color:#BF360C;margin-top:10px;line-height:1.5}
+.tgood{background:#F1F8E9;border-left:3px solid #558B2F;border-radius:0 8px 8px 0;padding:9px 12px;font-size:12px;color:#2E7D32;margin-top:7px;line-height:1.5}
+.ytbtn{display:flex;align-items:center;gap:9px;background:#FFF3F3;border:1px solid rgba(198,40,40,.25);border-radius:10px;padding:12px 14px;text-decoration:none;color:var(--text);margin-top:12px;font-size:12px;font-weight:700}
+.ytbadge{background:var(--red);color:#fff;font-size:9px;font-weight:800;padding:2px 7px;border-radius:4px;flex-shrink:0}
+
+/* RECORD MODAL */
+.recgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:12px}
+.recfg label{font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--text2);display:block;margin-bottom:4px}
+.recfg input{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:9px;color:var(--text);font-family:'Barlow',sans-serif;font-size:19px;padding:11px 8px;outline:none;text-align:center;font-weight:700}
+.recfg input:focus{border-color:var(--y)}
+.recsave{width:100%;background:var(--y);color:var(--black);border:none;border-radius:11px;font-family:'Barlow',sans-serif;font-weight:800;font-size:15px;padding:13px;cursor:pointer;margin-top:12px}
+
+/* REFERENCE */
+.refcard{background:var(--card);border-radius:var(--r);padding:14px;border:1.5px solid var(--border);margin-bottom:8px;display:flex;align-items:center;gap:12px;box-shadow:var(--sh)}
+.refl{flex:1}
+.reflbl{font-size:11px;font-weight:700;margin-bottom:6px;color:var(--text)}
+.refbg{background:var(--bg2);border-radius:100px;height:8px;overflow:hidden}
+.reffill{height:100%;border-radius:100px}
+.refrange{font-size:10px;color:var(--muted);margin-top:3px}
+.refnum{font-family:'Bebas Neue',sans-serif;font-size:22px;flex-shrink:0;min-width:46px;text-align:right}
+.youmark{background:var(--yl);border:1.5px solid var(--yb);border-radius:8px;padding:7px 11px;font-size:12px;font-weight:700;color:var(--black);margin-bottom:10px;text-align:center;display:none}
+
+/* TECHNIQUE ITEMS */
+.techitem{background:var(--card);border-radius:var(--r);padding:14px;margin-bottom:9px;border:1.5px solid var(--border);display:flex;gap:13px;box-shadow:var(--sh)}
+.techico{font-size:26px;flex-shrink:0;width:40px;text-align:center;margin-top:2px}
+.techname{font-size:14px;font-weight:800;margin-bottom:3px;color:var(--text)}
+.techdesc{font-size:12px;color:var(--text2);line-height:1.6}
+.techtip{font-size:11px;color:var(--green);margin-top:5px;font-weight:700}
+
+/* ANALYSIS */
+.aibox{background:var(--bg);border-radius:11px;padding:14px;border:1.5px solid var(--border)}
+.ai-score-row{display:flex;align-items:center;gap:9px;margin-bottom:7px}
+.ai-slbl{font-size:11px;font-weight:700;flex:1;color:var(--text2)}
+.ai-sbg{flex:2;background:var(--border);border-radius:100px;height:7px;overflow:hidden}
+.ai-sfill{height:100%;border-radius:100px;background:var(--y);transition:width 1s ease}
+.ai-sval{font-size:11px;font-weight:800;color:var(--black);min-width:28px;text-align:right}
+.spinner{width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--y2);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.botpad{height:30px}
+</style>
+</head>
+<body>
+
+<!-- ══════════════ LOGIN ══════════════ -->
+<div id="login">
+  <div class="logo">MAX<span>SPRINT</span></div>
+  <div class="tagline">⚽ 10m · 20m · 50m · U13/U14 · 6 Wochen</div>
+  <div class="lcard">
+    <div class="lsec">Spielerprofil</div>
+    <div class="lgrid">
+      <div class="fg"><label>Vorname *</label><input type="text" id="l_name" placeholder="Leon" autocomplete="off"></div>
+      <div class="fg"><label>Alter *</label><input type="number" id="l_age" placeholder="13" min="10" max="16" value="13"></div>
+    </div>
+    <div class="lgrid">
+      <div class="fg"><label>Größe (cm) *</label><input type="number" id="l_h" placeholder="162" min="130" max="200"></div>
+      <div class="fg"><label>Gewicht (kg) *</label><input type="number" id="l_w" placeholder="53" min="30" max="100"></div>
+    </div>
+    <div class="ldiv"></div>
+    <div class="lsec">Aktuelle Sprintzeiten</div>
+    <div class="sinput">
+      <div class="sl">Zeiten eingeben (Sekunden)</div>
+      <div class="lgrid" style="gap:8px">
+        <div class="fg"><label>10m</label><input type="number" id="l_t10" placeholder="1.90" step="0.01" min="1.4" max="3.5" oninput="calcPrev()"></div>
+        <div class="fg"><label>20m</label><input type="number" id="l_t20" placeholder="2.95" step="0.01" min="2.2" max="5.0" oninput="calcPrev()"></div>
+      </div>
+      <div class="lgrid" style="gap:8px;margin-top:8px">
+        <div class="fg" style="grid-column:1/-1"><label>50m</label><input type="number" id="l_t50" placeholder="7.60" step="0.01" min="5.5" max="12" oninput="calcPrev()"></div>
+      </div>
+    </div>
+    <div class="preview" id="preview">
+      <div style="font-size:12px;font-weight:800;color:var(--black);margin-bottom:10px">📊 6-Wochen-Ziele</div>
+      <div id="prev_rows"></div>
+      <div class="prev-note" id="prev_note"></div>
+    </div>
+    <button class="lbtn" onclick="startApp()">Training starten →</button>
+    <div class="ep-wrap" id="epWrap"></div>
+  </div>
+</div>
+
+<!-- ══════════════ APP ══════════════ -->
+<div id="app">
+  <div class="hdr">
+    <div class="hdr-top">
+      <div class="hdr-name" id="hdr_name">SPIELER</div>
+      <div class="hdr-right">
+        <select class="wsel" id="wsel" onchange="setWoche(this.value)">
+          <option value="1">Woche 1</option><option value="2">Woche 2</option>
+          <option value="3">Woche 3</option><option value="4">Woche 4</option>
+          <option value="5">Woche 5</option><option value="6">Woche 6</option>
+        </select>
+        <button class="hdr-logout" onclick="logout()">↩ Wechseln</button>
+        <button class="hdr-logout" style="background:#fff;color:var(--red);border-color:rgba(198,40,40,.3)" onclick="deleteCurrentProfile()">🗑 Löschen</button>
+      </div>
+    </div>
+
+    <div class="spd-grid">
+      <div class="spd-box">
+        <div class="spd-dist">10 METER</div>
+        <div class="spd-target" id="sh_t10">--</div>
+        <div class="spd-tlbl">ZIEL</div>
+        <div class="spd-entries" id="sh_e10"></div>
+        <div class="spd-badge" id="sh_g10"></div>
+        <div class="spd-pot" id="sh_p10"></div>
+      </div>
+      <div class="spd-box">
+        <div class="spd-dist">20 METER</div>
+        <div class="spd-target" id="sh_t20">--</div>
+        <div class="spd-tlbl">ZIEL</div>
+        <div class="spd-entries" id="sh_e20"></div>
+        <div class="spd-badge" id="sh_g20"></div>
+        <div class="spd-pot" id="sh_p20"></div>
+      </div>
+      <div class="spd-box">
+        <div class="spd-dist">50 METER</div>
+        <div class="spd-target" id="sh_t50">--</div>
+        <div class="spd-tlbl">ZIEL</div>
+        <div class="spd-entries" id="sh_e50"></div>
+        <div class="spd-badge" id="sh_g50"></div>
+        <div class="spd-pot" id="sh_p50"></div>
+      </div>
+    </div>
+
+    <div class="hdr-prog">
+      <div class="hdr-prog-row"><span id="prog_lbl">WOCHE 1 VON 6</span><span id="prog_pct">17%</span></div>
+      <div class="hdr-prog-bg"><div class="hdr-prog-fill" id="prog_fill" style="width:17%"></div></div>
+    </div>
+    <div class="recbtn-row">
+      <button class="rbtn" onclick="openRec()">+ Zeit eintragen</button>
+      <button class="rbtn" onclick="gotoTab('analyse')">🤖 Technik-Analyse</button>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" id="tab_training" onclick="switchTab('training',this)">🏃 Täglich</div>
+    <div class="tab" id="tab_technik" onclick="switchTab('technik',this)">🎯 Technik</div>
+    <div class="tab" id="tab_analyse" onclick="switchTab('analyse',this)">🤖 Analyse</div>
+    <div class="tab" id="tab_referenz" onclick="switchTab('referenz',this)">📊 Vergleich</div>
+  </div>
+
+  <!-- PANEL: TRAINING -->
+  <div class="panel active" id="panel-training">
+    <div class="dayrow" id="dayrow"></div>
+    <div id="daycontent"></div>
+    <div class="botpad"></div>
+  </div>
+
+  <!-- PANEL: TECHNIK -->
+  <div class="panel" id="panel-technik">
+    <div class="ptitle">Sprinttechnik</div>
+    <div class="psub">Antritt (10/20m) & Maximalspeed (50m)</div>
+    <div class="techitem"><div class="techico">⚡</div><div><div class="techname">Start & erste Schritte (0–10m)</div><div class="techdesc">Oberkörper stark vorgelehnt (~45°). Erste Schritte kurz, explosiv, tief. Arme aggressiv einsetzen – der erste Armzug rückwärts bringt das Bein nach vorne.</div><div class="techtip">✅ 10m-Sprint = 100% dein Startmotor. Technik hier ist wichtiger als kondition.</div></div></div>
+    <div class="techitem"><div class="techico">📈</div><div><div class="techname">Beschleunigung (10–20m)</div><div class="techdesc">Schrittweise aufrichten – von ~45° auf ~65°. Schrittlänge wächst. Frequenz bleibt hoch. Keine abrupte Aufrichtung – das bremst.</div><div class="techtip">✅ 20m-Zeit zeigt dir, wie schnell du die Übergangsphase meisterst.</div></div></div>
+    <div class="techitem"><div class="techico">🚀</div><div><div class="techname">Maximalspeed (20–50m)</div><div class="techdesc">Ab 20m: Oberkörper bei ~80°. Knie explosiv nach vorne-oben. Bodenkontakte so kurz wie möglich. Kiefer locker, Schultern tief.</div><div class="techtip">✅ 50m-Zeit = Beschleunigung + Maximalspeed. Flying Sprints verbessern die 20–50m-Zone.</div></div></div>
+    <div class="techitem"><div class="techico">💪</div><div><div class="techname">Armeinsatz</div><div class="techdesc">Ellbogen 90°, von Hüfte zur Wange. Nie vor dem Körper kreuzen. Arme treiben Beine an – besonders wichtig auf 10m und 50m.</div><div class="techtip">✅ Kreuzende Arme = größter Einzelfehler. Kostet auf 50m bis 0.3s.</div></div></div>
+    <div class="techitem"><div class="techico">🦵</div><div><div class="techname">Kniehub</div><div class="techdesc">Knie aktiv nach vorne-oben ziehen. Ab 20m Oberschenkel fast parallel zum Boden. Kniehebelauf als tägliche Übung überträgt sich 1:1.</div><div class="techtip">✅ Schlechter Kniehub = kurze Schrittlänge = langsamere 50m-Zeit.</div></div></div>
+    <a class="ytbtn" style="text-decoration:none" href="https://www.youtube.com/results?search_query=Sprinttechnik+Jugendfussball+10m+20m+50m+Antritt+Maximalspeed" target="_blank"><span class="ytbadge">YT</span>Sprinttechnik 10m–50m Jugendfußball</a>
+    <a class="ytbtn" style="text-decoration:none" href="https://www.youtube.com/results?search_query=Antritt+Fussball+erste+Schritte+Technik+explosiv" target="_blank"><span class="ytbadge">YT</span>Antritt & erste Schritte – Technik</a>
+    <div class="botpad"></div>
+  </div>
+
+  <!-- PANEL: ANALYSE -->
+  <div class="panel" id="panel-analyse">
+    <div class="ptitle">Technik-Analyse</div>
+    <div class="psub">KI-Selbstbewertung · Wöchentlich</div>
+    <div class="icard">
+      <div style="font-size:13px;font-weight:700;margin-bottom:8px">So funktioniert's:</div>
+      <div style="font-size:12px;color:var(--text2);line-height:1.7">
+        1. Beantworte die Fragen zu deiner Technik nach dem heutigen Training<br>
+        2. Die KI analysiert deine Selbsteinschätzung und gibt dir Feedback<br>
+        3. Wöchentlich wiederholen und Fortschritt verfolgen
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-top:8px;font-style:italic">
+        💡 Hinweis: Video-Upload ist in dieser App-Version nicht verfügbar. Die Selbstbewertung ist trotzdem sehr effektiv – Spitzentrainer nutzen strukturierte Selbstreflexion als primäres Feedback-Tool.
+      </div>
+    </div>
+    <div class="icard">
+      <div style="font-size:14px;font-weight:800;margin-bottom:14px">📋 Selbst-Check nach dem Training</div>
+      <div id="selfcheck_form"></div>
+      <button onclick="runAnalysis()" style="width:100%;background:var(--black);color:var(--y);border:none;border-radius:10px;font-family:'Barlow',sans-serif;font-weight:800;font-size:14px;padding:13px;cursor:pointer;margin-top:12px;letter-spacing:.3px">🤖 KI-Feedback erhalten</button>
+      <div id="ai_result" style="display:none;margin-top:12px"></div>
+    </div>
+    <div class="icard">
+      <div style="font-size:14px;font-weight:800;margin-bottom:10px">📅 Verlauf (6 Wochen)</div>
+      <div id="analysis_history"></div>
+    </div>
+    <div class="botpad"></div>
+  </div>
+
+  <!-- PANEL: REFERENZ -->
+  <div class="panel" id="panel-referenz">
+    <div class="ptitle">Zeitenvergleich</div>
+    <div class="psub">Wissenschaftliche Referenzwerte · U13 Fußball männlich</div>
+
+    <div class="youmark" id="ym10"></div>
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;color:var(--black);margin-bottom:6px;letter-spacing:.5px">10-METER SPRINT</div>
+    <div style="font-size:10px;color:var(--muted);margin-bottom:10px">Quelle: Normative Reference Centiles Youth Soccer (Ped. Exercise Sci. 2024) · n=1745</div>
+    <div class="refcard"><div class="refl"><div class="reflbl">P90+ · Top 10%</div><div class="refbg"><div class="reffill" style="width:92%;background:#1B5E20"></div></div><div class="refrange">unter 1.75s</div></div><div class="refnum" style="color:#1B5E20">1.75</div></div>
+    <div class="refcard"><div class="refl"><div class="reflbl">P75–P90 · Schnell</div><div class="refbg"><div class="reffill" style="width:76%;background:#388E3C"></div></div><div class="refrange">1.75 – 1.87s</div></div><div class="refnum" style="color:#388E3C">1.81</div></div>
+    <div class="refcard"><div class="refl"><div class="reflbl">P25–P75 · Durchschnitt · Mittel: 1.87s</div><div class="refbg"><div class="reffill" style="width:58%;background:#F9A825"></div></div><div class="refrange">1.87 – 2.00s</div></div><div class="refnum" style="color:#F9A825">1.94</div></div>
+    <div class="refcard"><div class="refl"><div class="reflbl">P10–P25 · Unteres Viertel</div><div class="refbg"><div class="reffill" style="width:40%;background:#E65100"></div></div><div class="refrange">2.00 – 2.15s</div></div><div class="refnum" style="color:#E65100">2.07</div></div>
+    <div class="refcard"><div class="refl"><div class="reflbl">P3–P10 · Langsam</div><div class="refbg"><div class="reffill" style="width:26%;background:#B71C1C"></div></div><div class="refrange">über 2.15s</div></div><div class="refnum" style="color:#B71C1C">2.20</div></div>
+
+    <div class="youmark" id="ym20" style="margin-top:14px"></div>
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;color:var(--black);margin:14px 0 6px;letter-spacing:.5px">20-METER SPRINT</div>
+    <div style="font-size:10px;color:var(--muted);margin-bottom:10px">Abgeleitet aus 10m-Splits + 10–20m-Übergangsphase; U13-Hochleistungsdaten</div>
+    <div class="refcard"><div class="refl"><div class="reflbl">P90+ · Top 10%</div><div class="refbg"><div class="reffill" style="width:92%;background:#1B5E20"></div></div><div class="refrange">unter 2.72s</div></div><div class="refnum" style="color:#1B5E20">2.72</div></div>
+    <div class="refcard"><div class="refl"><div class="reflbl">P75–P90 · Schnell</div><div class="refbg"><div class="reffill" style="width:76%;background:#388E3C"></div></div><div class="refrange">2.72 – 2.88s</div></div><div class="refnum" style="color:#388E3C">2.80</div></div>
+    <div class="refcard"><div class="refl"><div class="reflbl">P25–P75 · Durchschnitt · Mittel: 2.88s</div><div class="refbg"><div class="reffill" style="width:58%;background:#F9A825"></div></div><div class="refrange">2.88 – 3.05s</div></div><div class="refnum" style="color:#F9A825">2.97</div></div>
+    <div class="refcard"><div class="refl"><div class="reflbl">P10–P25 · Unteres Viertel</div><div class="refbg"><div class="reffill" style="width:40%;background:#E65100"></div></div><div class="refrange">3.05 – 3.25s</div></div><div class="refnum" style="color:#E65100">3.15</div></div>
+    <div class="refcard"><div class="refl"><div class="reflbl">P3–P10 · Langsam</div><div class="refbg"><div class="reffill" style="width:26%;background:#B71C1C"></div></div><div class="refrange">über 3.25s</div></div><div class="refnum" style="color:#B71C1C">3.35</div></div>
+
+    <div class="youmark" id="ym50" style="margin-top:14px"></div>
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;color:var(--black);margin:14px 0 6px;letter-spacing:.5px">50-METER SPRINT</div>
+    <div style="font-size:10px;color:var(--muted);margin-bottom:10px">Quelle: Slovak U21 Profi-Mittelwert 6.80s; U13-Nachwuchs-Benchmark abgeleitet</div>
+    <div class="refcard"><div class="refl"><div class="reflbl">P90+ · Top 10%</div><div class="refbg"><div class="reffill" style="width:92%;background:#1B5E20"></div></div><div class="refrange">unter 6.80s</div></div><div class="refnum" style="color:#1B5E20">6.80</div></div>
+    <div class="refcard"><div class="refl"><div class="reflbl">P75–P90 · Schnell</div><div class="refbg"><div class="reffill" style="width:76%;background:#388E3C"></div></div><div class="refrange">6.80 – 7.20s</div></div><div class="refnum" style="color:#388E3C">7.00</div></div>
+    <div class="refcard"><div class="refl"><div class="reflbl">P25–P75 · Durchschnitt</div><div class="refbg"><div class="reffill" style="width:58%;background:#F9A825"></div></div><div class="refrange">7.20 – 7.80s</div></div><div class="refnum" style="color:#F9A825">7.50</div></div>
+    <div class="refcard"><div class="refl"><div class="reflbl">P10–P25 · Unteres Viertel</div><div class="refbg"><div class="reffill" style="width:40%;background:#E65100"></div></div><div class="refrange">7.80 – 8.40s</div></div><div class="refnum" style="color:#E65100">8.10</div></div>
+    <div class="refcard"><div class="refl"><div class="reflbl">P3–P10 · Langsam</div><div class="refbg"><div class="reffill" style="width:26%;background:#B71C1C"></div></div><div class="refrange">über 8.40s</div></div><div class="refnum" style="color:#B71C1C">8.70</div></div>
+
+    <div class="icard" style="margin-top:12px">
+      <div style="font-size:13px;line-height:1.8;color:var(--text2)">
+        <strong style="color:var(--text)">Realistisches Potenzial in 6 Wochen (13 Jahre):</strong><br>
+        • <strong>10m:</strong> 0.05–0.15s schneller (v.a. durch Technik: Start & erste Schritte)<br>
+        • <strong>20m:</strong> 0.08–0.20s schneller (Übergangsphase & Aufrichtung)<br>
+        • <strong>50m:</strong> 0.20–0.50s schneller (Technik + Kraft kombiniert)<br>
+        <em style="color:var(--muted);font-size:11px">Basis: Normative Centile Youth Soccer (PMC11751035), 0.44–0.72s/Jahr auf 30m; 6 Wochen ≈ 1/9 davon</em>
+      </div>
+    </div>
+    <div class="botpad"></div>
+  </div>
+</div>
+
+<!-- RECORD MODAL -->
+<div class="ov" id="rec_ov" onclick="closeRec(event)">
+  <div class="modal">
+    <button class="mcls" onclick="closeRec()">×</button>
+    <div class="mtitle">Zeit eintragen</div>
+    <div class="mex">Ad-hoc Zeiteintrag (Sonntags: Zeitmessung im Tagesplan nutzen) · <span id="rec_date"></span></div>
+    <div class="recgrid">
+      <div class="recfg"><label>10m (s)</label><input type="number" id="rec_10" placeholder="1.90" step="0.01"></div>
+      <div class="recfg"><label>20m (s)</label><input type="number" id="rec_20" placeholder="2.95" step="0.01"></div>
+      <div class="recfg"><label>50m (s)</label><input type="number" id="rec_50" placeholder="7.60" step="0.01"></div>
+    </div>
+    <button class="recsave" onclick="saveTime()">Zeit speichern ✓</button>
+  </div>
+</div>
+
+<!-- TIP MODAL -->
+<div class="ov" id="tip_ov" onclick="closeTip(event)">
+  <div class="modal">
+    <button class="mcls" onclick="closeTip()">×</button>
+    <div class="mtitle" id="tip_title"></div>
+    <div class="mex" id="tip_ex"></div>
+    <div id="tip_content"></div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════
+//  DB  (localStorage, no server needed)
+// ═══════════════════════════════════════
+const DB={
+  ps(){ try{return JSON.parse(localStorage.getItem('ms4_players')||'[]')}catch{return[]}},
+  sp(arr){ localStorage.setItem('ms4_players',JSON.stringify(arr)) },
+  get(id){ return this.ps().find(p=>p.id===id)||null },
+  save(p){ const a=this.ps(),i=a.findIndex(x=>x.id===p.id); i>=0?a[i]=p:a.push(p); this.sp(a) },
+  del(id){ this.sp(this.ps().filter(p=>p.id!==id)) },
+  cid(){ return localStorage.getItem('ms4_cur') },
+  setcid(id){ localStorage.setItem('ms4_cur',id) },
+  clrcid(){ localStorage.removeItem('ms4_cur') },
+  analyses(id){ try{return JSON.parse(localStorage.getItem('ms4_an_'+id)||'[]')}catch{return[]}},
+  savean(id,a){ localStorage.setItem('ms4_an_'+id,JSON.stringify(a)) }
+};
+
+// ═══════════════════════════════════════
+//  BENCHMARKS  (scientific sources)
+// ═══════════════════════════════════════
+// 10m: Normative Reference Centiles Youth Soccer, Ped.Ex.Sci 2024; mean ~1.87s for ~13.6y
+// 20m: derived from 10m split data + 10-20m phase (~1.00-1.05s additional)
+// 50m: Slovak U21 6.80s professional; U13 benchmarks scaled
+const B10=[
+  {s:'Top 10%',  c:'#1B5E20', min:0,    max:1.75},
+  {s:'Schnell',  c:'#388E3C', min:1.75, max:1.87},
+  {s:'Durchschnitt',c:'#F9A825',min:1.87,max:2.00},
+  {s:'Unteres Viertel',c:'#E65100',min:2.00,max:2.15},
+  {s:'Langsam',  c:'#B71C1C', min:2.15, max:99},
+];
+const B20=[
+  {s:'Top 10%',  c:'#1B5E20', min:0,    max:2.72},
+  {s:'Schnell',  c:'#388E3C', min:2.72, max:2.88},
+  {s:'Durchschnitt',c:'#F9A825',min:2.88,max:3.05},
+  {s:'Unteres Viertel',c:'#E65100',min:3.05,max:3.25},
+  {s:'Langsam',  c:'#B71C1C', min:3.25, max:99},
+];
+const B50=[
+  {s:'Top 10%',  c:'#1B5E20', min:0,    max:6.80},
+  {s:'Schnell',  c:'#388E3C', min:6.80, max:7.20},
+  {s:'Durchschnitt',c:'#F9A825',min:7.20,max:7.80},
+  {s:'Unteres Viertel',c:'#E65100',min:7.80,max:8.40},
+  {s:'Langsam',  c:'#B71C1C', min:8.40, max:99},
+];
+function grp(t,B){ return B.find(b=>t>=b.min&&t<b.max)||B[B.length-1] }
+function imp10(t){ return t>=2.15?.12:t>=2.00?.10:t>=1.87?.07:t>=1.75?.05:.03 }
+function imp20(t){ return t>=3.25?.18:t>=3.05?.14:t>=2.88?.10:t>=2.72?.07:.05 }
+function imp50(t){ return t>=8.40?.48:t>=7.80?.38:t>=7.20?.28:t>=6.80?.18:.12 }
+
+// ═══════════════════════════════════════
+//  LOGIN
+// ═══════════════════════════════════════
+function calcPrev(){
+  const t10=parseFloat(document.getElementById('l_t10').value);
+  const t20=parseFloat(document.getElementById('l_t20').value);
+  const t50=parseFloat(document.getElementById('l_t50').value);
+  const prev=document.getElementById('preview');
+  if(isNaN(t10)&&isNaN(t20)&&isNaN(t50)){prev.style.display='none';return}
+  let rows='';
+  const dists=[{lbl:'10m',t:t10,B:B10,ifn:imp10,min:1.4,max:3.5},{lbl:'20m',t:t20,B:B20,ifn:imp20,min:2.2,max:5},{lbl:'50m',t:t50,B:B50,ifn:imp50,min:5.5,max:12}];
+  let pots=[];
+  dists.forEach(d=>{
+    if(!isNaN(d.t)&&d.t>=d.min&&d.t<=d.max){
+      const g=grp(d.t,d.B),im=d.ifn(d.t),goal=(d.t-im).toFixed(2);
+      rows+=`<div class="prev-row">
+        <div class="prev-dist">${d.lbl}</div>
+        <div class="prev-right">
+          <div class="prev-curr">${d.t.toFixed(2)}s</div>
+          <div class="prev-goal">Ziel: ${goal}s (−${im.toFixed(2)}s)</div>
+          <div class="prev-grp" style="color:${g.c}">${g.s}</div>
+        </div>
+      </div>`;
+      pots.push(`${d.lbl}: −${im.toFixed(2)}s realistisch`);
+    }
+  });
+  document.getElementById('prev_rows').innerHTML=rows;
+  document.getElementById('prev_note').innerHTML=pots.join(' · ')+'<br><em style="color:var(--muted)">Größtes Potenzial: Technik-Optimierung in Woche 1–2.</em>';
+  prev.style.display='block';
+}
+
+function startApp(){
+  const name=document.getElementById('l_name').value.trim();
+  const age=parseInt(document.getElementById('l_age').value)||13;
+  const t10=parseFloat(document.getElementById('l_t10').value);
+  const t20=parseFloat(document.getElementById('l_t20').value);
+  const t50=parseFloat(document.getElementById('l_t50').value);
+  const height=parseFloat(document.getElementById('l_h').value);
+  const weight=parseFloat(document.getElementById('l_w').value);
+  if(!name){alert('Bitte Vornamen eingeben!');return}
+  if(isNaN(height)||height<130||height>220){alert('Bitte Körpergröße eingeben (130–220 cm).');return}
+  if(isNaN(weight)||weight<30||weight>120){alert('Bitte Körpergewicht eingeben (30–120 kg).');return}
+  const any=(!isNaN(t10)&&t10>=1.4&&t10<=3.5)||(!isNaN(t20)&&t20>=2.2&&t20<=5)||(!isNaN(t50)&&t50>=5.5&&t50<=12);
+  if(!any){alert('Bitte mindestens eine gültige Sprintzeit eingeben!');return}
+  const today=ds();
+  const p={
+    id:Date.now().toString(), name, age,
+    height:height||null,
+    weight:weight||null,
+    week:1,
+    t10:(!isNaN(t10)&&t10>=1.4&&t10<=3.5)?t10:null,
+    t20:(!isNaN(t20)&&t20>=2.2&&t20<=5)?t20:null,
+    t50:(!isNaN(t50)&&t50>=5.5&&t50<=12)?t50:null,
+    times10:(!isNaN(t10)&&t10>=1.4&&t10<=3.5)?[{d:today,v:t10}]:[],
+    times20:(!isNaN(t20)&&t20>=2.2&&t20<=5)?[{d:today,v:t20}]:[],
+    times50:(!isNaN(t50)&&t50>=5.5&&t50<=12)?[{d:today,v:t50}]:[],
+  };
+  DB.save(p); DB.setcid(p.id); launch(p);
+}
+
+function renderEP(){
+  const ps=DB.ps(),w=document.getElementById('epWrap');
+  if(!ps.length){w.innerHTML='';return}
+  w.innerHTML=`<div class="ep-lbl">Vorhandene Profile</div><div style="display:flex;flex-direction:column;gap:8px;margin-top:6px">`+
+    ps.map(p=>`<div style="display:flex;align-items:center;background:var(--bg);border:1.5px solid var(--border);border-radius:11px;overflow:hidden">
+      <div style="flex:1;padding:10px 13px;cursor:pointer" onclick="DB.setcid('${p.id}');launch(DB.get('${p.id}'))">
+        <div style="font-size:14px;font-weight:800;color:var(--text)">${p.name} <span style="font-weight:400;color:var(--muted);font-size:12px">· ${p.age} J · ${p.height?p.height+'cm · ':''}${p.weight?p.weight+'kg':''}</span></div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px">${p.t10?'10m: '+p.t10+'s':''} ${p.t20?'· 20m: '+p.t20+'s':''} ${p.t50?'· 50m: '+p.t50+'s':''}</div>
+      </div>
+      <button onclick="delP('${p.id}')" style="background:var(--red);border:none;color:#fff;font-size:12px;font-weight:800;padding:0 14px;height:100%;min-height:52px;cursor:pointer;letter-spacing:.3px;flex-shrink:0">Löschen</button>
+    </div>`).join('')+'</div>';
+}
+function deleteCurrentProfile(){
+  if(!CP)return;
+  if(!confirm('Profil von '+CP.name+' wirklich löschen?\nAlle gespeicherten Zeiten und Analysen werden gelöscht.'))return;
+  const id=CP.id;
+  DB.del(id);
+  localStorage.removeItem('ms4_an_'+id);
+  DB.clrcid();
+  CP=null;
+  document.getElementById('app').style.display='none';
+  document.getElementById('login').style.display='flex';
+  // Clear login fields
+  ['l_name','l_h','l_w','l_t10','l_t20','l_t50'].forEach(f=>{const el=document.getElementById(f);if(el)el.value=''});
+  document.getElementById('l_age').value=13;
+  document.getElementById('preview').style.display='none';
+  renderEP();
+}
+function delP(id){
+  const p=DB.get(id);
+  if(!p)return;
+  if(!confirm('Profil von '+p.name+' wirklich löschen?\nAlle gespeicherten Zeiten und Analysen werden gelöscht.'))return;
+  DB.del(id);
+  localStorage.removeItem('ms4_an_'+id);
+  if(DB.cid()===id) DB.clrcid();
+  renderEP();
+}
+
+// ═══════════════════════════════════════
+//  APP LAUNCH
+// ═══════════════════════════════════════
+let CP=null, curDay='mo';
+function launch(p){
+  CP=p;
+  document.getElementById('login').style.display='none';
+  document.getElementById('app').style.display='block';
+  document.getElementById('hdr_name').innerHTML=p.name.toUpperCase()+'<span> · U'+p.age+'</span>';
+  document.getElementById('wsel').value=p.week||1;
+  renderHdr(p); renderDayRow(); renderDay(curDay);
+  renderYouMarkers(p); renderSelfCheckForm(); renderAnalysisHistory();
+}
+
+function renderHdr(p){
+  const w=p.week||1,pct=Math.round(((w-1)/5)*83+17);
+  document.getElementById('prog_fill').style.width=pct+'%';
+  document.getElementById('prog_lbl').textContent=`WOCHE ${w} VON 6`;
+  document.getElementById('prog_pct').textContent=pct+'%';
+  [['10',p.t10,p.times10,B10,imp10],['20',p.t20,p.times20,B20,imp20],['50',p.t50,p.times50,B50,imp50]].forEach(([d,t,times,B,ifn])=>{
+    if(!t){document.getElementById(`sh_t${d}`).textContent='--';return}
+    const im=ifn(t),goal=(t-im).toFixed(2);
+    document.getElementById(`sh_t${d}`).textContent=goal+'s';
+    const sliced=(times||[]).slice().reverse().slice(0,3);
+    document.getElementById(`sh_e${d}`).innerHTML=sliced.map((e,i)=>{
+      const prev=sliced[i+1];
+      const delta=prev?((e.v-prev.v)).toFixed(2):null;
+      const cls=delta&&delta<0?'better':delta&&delta>0?'worse':'';
+      return `<div class="spd-entry"><span class="spd-edate">${e.d}</span><span class="spd-eval">${e.v}s</span><span class="spd-edelta ${cls}">${delta?(delta<0?delta+'s':'+'+delta+'s'):'Start'}</span></div>`;
+    }).join('');
+    const g=grp(t,B);
+    const badge=document.getElementById(`sh_g${d}`);
+    badge.textContent=g.s; badge.style.color=g.c; badge.style.borderColor=g.c; badge.style.background=g.c+'18';
+    document.getElementById(`sh_p${d}`).textContent=`Ziel: −${im.toFixed(2)}s`;
+  });
+}
+
+function renderYouMarkers(p){
+  [['10',p.t10,B10],['20',p.t20,B20],['50',p.t50,B50]].forEach(([d,t,B])=>{
+    const m=document.getElementById(`ym${d}`);
+    if(!t||!m){if(m)m.style.display='none';return}
+    const g=grp(t,B);
+    m.style.display='block';
+    m.innerHTML=`Du (${t}s) → <strong style="color:${g.c}">${g.s}</strong>`;
+  });
+}
+
+function setWoche(w){
+  const p=DB.get(CP.id); p.week=parseInt(w); DB.save(p); CP=p; renderHdr(p);
+}
+function logout(){DB.clrcid();document.getElementById('app').style.display='none';document.getElementById('login').style.display='flex';renderEP()}
+
+// ═══════════════════════════════════════
+//  RECORD TIME
+// ═══════════════════════════════════════
+function openRec(){document.getElementById('rec_date').textContent=ds();document.getElementById('rec_ov').classList.add('open')}
+function closeRec(e){if(!e||e.target.id==='rec_ov'){document.getElementById('rec_ov').classList.remove('open');['rec_10','rec_20','rec_50'].forEach(id=>document.getElementById(id).value='')}}
+function saveTime(){
+  const p=DB.get(CP.id),today=ds();
+  const t10=parseFloat(document.getElementById('rec_10').value);
+  const t20=parseFloat(document.getElementById('rec_20').value);
+  const t50=parseFloat(document.getElementById('rec_50').value);
+  if(isNaN(t10)&&isNaN(t20)&&isNaN(t50)){alert('Mindestens eine Zeit eingeben');return}
+  if(!isNaN(t10)&&t10>=1.4&&t10<=3.5){p.times10=p.times10||[];p.times10.push({d:today,v:t10});p.t10=t10}
+  if(!isNaN(t20)&&t20>=2.2&&t20<=5){p.times20=p.times20||[];p.times20.push({d:today,v:t20});p.t20=t20}
+  if(!isNaN(t50)&&t50>=5.5&&t50<=12){p.times50=p.times50||[];p.times50.push({d:today,v:t50});p.t50=t50}
+  DB.save(p);CP=p;renderHdr(p);renderYouMarkers(p);closeRec();alert('✅ Zeit gespeichert!')
+}
+
+// ═══════════════════════════════════════
+//  DAILY TRAINING DATA
+// ═══════════════════════════════════════
+// Antritt focus = 10m/20m emphasis | MaxSpeed focus = 50m emphasis | Both = equal
+const DAYS={
+  mo:{lbl:'Montag',ico:'⚡',type:'Antritt & Beschleunigung',col:'y',meta:'45–55 Min · 10m/20m Fokus',focus:'antritt',
+    phases:[
+      {lbl:'Aufwärmen · 12 Min',exs:[
+        {n:'Kniehebelauf',s:'2×20m – Knie bis Hüfthöhe',yt:'Kniehebelauf+Sprint+Technik+Jugend',tip:'kniehebelauf',solo:true},
+        {n:'Anfersen',s:'2×20m – Ferse zur Gesäßfalte',yt:'Anfersen+Lauf+ABC+Sprint',tip:'anfersen',solo:true},
+        {n:'Skippings',s:'2×20m – maximale Frequenz',yt:'Skipping+Frequenz+Sprint',tip:'skippings',solo:true},
+        {n:'Steigerungsläufe',s:'2×40m – 70% → 90%',yt:'Steigerungslauf+Sprint+Aufwärmen',tip:'steigerung',solo:true},
+      ]},
+      {lbl:'Hauptteil · Antritt 10m & 20m',exs:[
+        {n:'10m Sprint',s:'8 Wdh · Pause: 75 Sek | Startposition: tiefer Stand, Zeit stoppen!',yt:'10m+Sprint+Antritt+Beschleunigung+Fussball',tip:'sprint10',solo:true},
+        {n:'20m Sprint',s:'6 Wdh · Pause: 2 Min | Zeitmessung! Fokus Übergangsphase',yt:'20m+Sprint+Technik+Antritt+Aufrichtung',tip:'sprint20',solo:true},
+        {n:'10m–20m Staffel',s:'4 Wdh: 10m Sprint, 5 Sek Pause, direkt weiter auf 20m | Pause: 3 Min',yt:'10m+20m+Sprint+Antritt+Übergang+Technik',tip:'staffel',solo:true},
+      ]},
+    ]},
+  di:{lbl:'Dienstag',ico:'🔄',type:'Agilität & Schulterblick',col:'b',meta:'35–45 Min · Solo trainierbar',focus:'both',
+    sc:true, // shoulder check day
+    phases:[
+      {lbl:'Schulterblick-Training',sc:true},
+      {lbl:'Schnelle Wendungen',exs:[
+        {n:'T-Test solo',s:'6 Wdh – 4 Hütchen in T-Form aufbauen, Zeit stoppen',yt:'T-Test+Agility+Solo+Fussball',tip:'ttest',solo:true},
+        {n:'5-10-5 Shuttle Sprint',s:'6 Wdh · Pause: 60 Sek | Richtungswechsel tief bleiben',yt:'5-10-5+Shuttle+Run+Agility+Solo',tip:'shuttle',solo:true},
+        {n:'Richtungswechsel 45°',s:'3×8 je Seite – explosiv abstoppen & starten',yt:'Richtungswechsel+Sprint+Cut+Solo+Fussball',tip:'riwechsel',solo:true},
+      ]},
+      {lbl:'Tiefer Schwerpunkt',exs:[
+        {n:'Defensive Slide Steps',s:'3×15m links + 15m rechts – Knie gebeugt',yt:'Defensive+Slides+Football+Low+Centre',tip:'slides',solo:true},
+        {n:'Squat Walk',s:'3×10m vorwärts + 10m rückwärts – Position halten',yt:'Squat+Walk+Lateral+Football',tip:'sqwalk',solo:true},
+      ]},
+    ]},
+  mi:{lbl:'Mittwoch',ico:'💪',type:'Kraft & Plyometrie',col:'r',meta:'55–65 Min · Explosivität aufbauen',focus:'both',
+    phases:[
+      {lbl:'Aufwärmen',exs:[
+        {n:'Hampelmann + dynamische Kniebeugen',s:'3×15 – Gelenke mobilisieren',yt:'Dynamic+Warm+Up+Krafttraining+Jugend',tip:'aufwaermen_kraft',solo:true},
+      ]},
+      {lbl:'Kraft',exs:[
+        {n:'Kniebeugen',s:'4×5 – explosiv aufstehen, Antritt-Kraft!',yt:'Kniebeugen+Technik+Jugend+Anfänger',tip:'squat',solo:true},
+        {n:'Kreuzheben / RDL',s:'4×5 – hintere Kette für 50m Maximalspeed',yt:'Kreuzheben+RDL+Technik+Jugend',tip:'deadlift',solo:true},
+        {n:'Ausfallschritte',s:'3×8 je Bein',yt:'Ausfallschritte+Lunge+Sprint',tip:'lunge',solo:true},
+        {n:'Wadenheben einbeinig',s:'3×15 je Seite – Abdruck optimieren',yt:'Wadenheben+einbeinig+Sprint',tip:'wade',solo:true},
+      ]},
+      {lbl:'Plyometrie',exs:[
+        {n:'Box Jump / Kastensprung',s:'3×5 – für 10m-Antritt-Kraft',yt:'Box+Jump+Kastensprung+Plyometrie+Jugend',tip:'boxjump',solo:true},
+        {n:'Wechselsprünge',s:'3×10 – Schrittlänge für 20–50m',yt:'Wechselsprünge+Sprungkraft+Fussball',tip:'wechselsprung',solo:true},
+        {n:'Sprungläufe (Bounding)',s:'3×20m – weite Schritte, Maximalspeed-Vorbereitung',yt:'Bounding+Sprungläufe+Sprint+Plyometrie',tip:'bounds',solo:true},
+      ]},
+    ]},
+  do:{lbl:'Donnerstag',ico:'🚀',type:'Maximalspeed · 50m',col:'y',meta:'45–50 Min · 50m Fokus',focus:'maxspeed',
+    phases:[
+      {lbl:'Aufwärmen · 12 Min',exs:[
+        {n:'Lauf-ABC komplett',s:'2× alles: Knieheber, Anfersen, Skippings',yt:'Lauf+ABC+komplett+Sprint',tip:'kniehebelauf',solo:true},
+        {n:'Steigerungsläufe',s:'3×50m – letzte 20m bei 95%',yt:'Steigerungslauf+50m+Sprint',tip:'steigerung',solo:true},
+      ]},
+      {lbl:'Flying Sprints · Maximalgeschwindigkeit',exs:[
+        {n:'20m Anlauf + 20m Max (Flying)',s:'4 Wdh · Pause: 3 Min | Höchstgeschwindigkeit!',yt:'Flying+Sprint+20m+Anlauf+Maximalsprint+Technik',tip:'flying20',solo:true},
+        {n:'30m Anlauf + 20m Max (Flying)',s:'4 Wdh · Pause: 4 Min | Zeit der 20m messen',yt:'Flying+Sprint+30m+Anlauf+Maximalspeed+Training',tip:'flying30',solo:true},
+        {n:'50m Durchsprint',s:'4 Wdh · Pause: 5 Min | Zeit stoppen! Eintragen!',yt:'50m+Sprint+Technik+Maximalgeschwindigkeit+Zeit',tip:'sprint50',solo:true},
+      ]},
+    ]},
+  fr:{lbl:'Freitag',ico:'🔄',type:'Agilität & Beweglichkeit',col:'b',meta:'35–40 Min · Solo trainierbar',focus:'both',
+    sc:true,
+    phases:[
+      {lbl:'Schulterblick-Training',sc:true},
+      {lbl:'Beweglichkeit',exs:[
+        {n:'Beinschwingen vorwärts & seitlich',s:'3×10 je Seite – locker pendeln',yt:'Leg+Swings+Dynamic+Warm+Up+Sprint+Mobility',tip:'legswing',solo:true},
+        {n:'Weltrekordstretch',s:'5×10 Sek je Seite – Hüfte & Brust',yt:'World+Record+Stretch+Hip+Flexor+Mobility',tip:'weltrekord',solo:true},
+        {n:'90-90 Hüftstretch',s:'3×60 Sek je Seite',yt:'90-90+Hip+Mobility+Football+Stretch',tip:'hip90',solo:true},
+      ]},
+      {lbl:'Antritt-Aktivierung (leicht)',exs:[
+        {n:'10m Sprint kontrolliert',s:'4 Wdh bei 80% – Technik-Fokus, keine Maximalbelastung',yt:'10m+Sprint+Technik+kontrolliert+Aufwärmen',tip:'sprint10',solo:true},
+      ]},
+    ]},
+  sa:{lbl:'Samstag',ico:'🛌',type:'Regeneration',col:'g',meta:'Pause ist Training!',rest:true},
+  so:{lbl:'Sonntag',ico:'⏱',type:'Wöchentliche Zeitmessung',col:'y',meta:'30–40 Min · Beste Zeit wird gespeichert',focus:'both',measure:true,
+    phases:[
+      {lbl:'Aufwärmen · 12 Min – speziell für Zeitmessung',exs:[
+        {n:'Lockeres Einlaufen',s:'5 Min – locker traben, Körper aufwärmen',yt:'Warm+Up+Laufen+Sprint+Vorbereitung',tip:'steigerung',solo:true},
+        {n:'Kniehebelauf',s:'2×20m – Hüfte mobilisieren',yt:'Kniehebelauf+Sprint+Technik+Jugend',tip:'kniehebelauf',solo:true},
+        {n:'Anfersen',s:'2×20m – Beinrückführung aktivieren',yt:'Anfersen+Lauf+ABC+Sprint',tip:'anfersen',solo:true},
+        {n:'Steigerungsläufe',s:'3×40m – 60% → 80% → 90% | KEIN Vollsprint',yt:'Steigerungslauf+Sprint+Aufwärmen',tip:'steigerung',solo:true},
+      ]},
+    ]},
+};
+
+// ═══════════════════════════════════════
+//  SHOULDER CHECK TRAINER (built-in)
+// ═══════════════════════════════════════
+let scTimer=null, scRound=0, scHits=0, scTotal=10, scActive=false;
+const scCues=['LINKS ←','RECHTS →','LINKS ←','RECHTS →','← LINKS','RECHTS →','LINKS ←','RECHTS →','← LINKS','RECHTS →'];
+const scDir=['L','R','L','R','L','R','L','R','L','R'];
+let scQueue=[];
+
+function scHTML(){
+  return `<div class="sc-trainer">
+    <div class="sc-trainer-hdr">
+      <div class="uico b" style="font-size:20px">👁</div>
+      <div><div class="sc-trainer-title">Schulterblick-Trainer</div><div class="sc-trainer-sub">Solo · Tablet vor dir aufstellen · Auf Signal reagieren</div></div>
+    </div>
+    <div class="sc-screen">
+      <div class="sc-instruction">Stell das Tablet 1–2m vor dich hin.<br>Drehe deinen Kopf auf das Signal.<br>Dann zurück zum Tablet.</div>
+      <div class="sc-cue" id="sc_cue">BEREIT?</div>
+      <div class="sc-counter" id="sc_cnt">0 / ${scTotal}</div>
+      <div class="sc-stats">
+        <div class="sc-stat"><div class="sc-stat-val" id="sc_hits">0</div><div class="sc-stat-lbl">Reaktionen</div></div>
+        <div class="sc-stat"><div class="sc-stat-val" id="sc_time">--</div><div class="sc-stat-lbl">Sek/Signal</div></div>
+      </div>
+    </div>
+    <div class="sc-controls">
+      <button class="sc-start-btn" id="sc_btn" onclick="scToggle()">▶ Training starten (${scTotal} Signale)</button>
+    </div>
+    <a class="sc-yt-link" href="https://www.youtube.com/watch?v=sgGciraA4pM" target="_blank">
+      <span class="sc-yt-link-badge">YT</span>
+      <span class="sc-yt-link-text">Schulterblick-Erklärung: "Check Your Shoulder" – Technik verstehen</span>
+    </a>
+    <a class="sc-yt-link" href="https://www.youtube.com/watch?v=A7YR73ALZ1s" target="_blank">
+      <span class="sc-yt-link-badge">YT</span>
+      <span class="sc-yt-link-text">Scanning Drill – Team-Übung als Vorlage für Solo-Training</span>
+    </a>
+    <a class="sc-yt-link" href="https://www.youtube.com/watch?v=7fGvWAfoYCM" target="_blank">
+      <span class="sc-yt-link-badge">YT</span>
+      <span class="sc-yt-link-text">Ødegaard Shoulder Checks analysiert – so geht's richtig</span>
+    </a>
+  </div>`;
+}
+
+function scToggle(){
+  if(scActive){scStop();return}
+  scActive=true;scRound=0;scHits=0;
+  document.getElementById('sc_btn').textContent='⏹ Stoppen';
+  document.getElementById('sc_btn').classList.add('stop');
+  document.getElementById('sc_cue').textContent='';
+  // Shuffle cues
+  scQueue=[...Array(scTotal)].map((_,i)=>i%2===0?'LINKS ←':'→ RECHTS');
+  // shuffle
+  for(let i=scQueue.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[scQueue[i],scQueue[j]]=[scQueue[j],scQueue[i]]}
+  scNext();
+}
+
+function scNext(){
+  if(scRound>=scTotal){scFinish();return}
+  const delay=1500+Math.random()*2000; // 1.5–3.5s random interval
+  scTimer=setTimeout(()=>{
+    const cue=scQueue[scRound];
+    document.getElementById('sc_cue').textContent=cue;
+    document.getElementById('sc_cue').classList.add('show');
+    setTimeout(()=>document.getElementById('sc_cue').classList.remove('show'),200);
+    scRound++;scHits++;
+    document.getElementById('sc_cnt').textContent=`${scRound} / ${scTotal}`;
+    document.getElementById('sc_hits').textContent=scHits;
+    scNext();
+  },delay);
+}
+
+function scStop(){
+  clearTimeout(scTimer);scActive=false;
+  document.getElementById('sc_btn').textContent=`▶ Neu starten (${scTotal} Signale)`;
+  document.getElementById('sc_btn').classList.remove('stop');
+  document.getElementById('sc_cue').textContent='GESTOPPT';
+}
+
+function scFinish(){
+  scActive=false;
+  document.getElementById('sc_btn').textContent=`✅ Nochmal starten`;
+  document.getElementById('sc_btn').classList.remove('stop');
+  document.getElementById('sc_cue').textContent='FERTIG!';
+  document.getElementById('sc_cnt').textContent=`${scTotal} / ${scTotal}`;
+}
+
+// ═══════════════════════════════════════
+//  RENDER DAYS
+// ═══════════════════════════════════════
+function renderDayRow(){
+  document.getElementById('dayrow').innerHTML=Object.keys(DAYS).map(k=>{
+    const d=DAYS[k];
+    return`<div class="daybtn${k===curDay?' active':''}" onclick="selDay('${k}',this)"><div class="dn">${d.lbl.slice(0,2)}</div><div class="di">${d.ico}</div></div>`;
+  }).join('');
+}
+
+function selDay(k,el){
+  document.querySelectorAll('.daybtn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');curDay=k;renderDay(k);
+}
+
+function renderDay(k){
+  const d=DAYS[k],cont=document.getElementById('daycontent');
+  if(d.rest){
+    cont.innerHTML=`<div class="rest-card"><div style="font-size:42px;margin-bottom:10px">${d.ico}</div><div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--black)">Regeneration</div><div style="font-size:13px;color:var(--text2);margin-top:10px;line-height:1.7">Pause = Training.<br>Schlaf, Ernährung & Erholung machen <strong>30–40%</strong> deines Fortschritts.<br><br>Optional: 10 Min leichtes Dehnen.</div></div>`;return
+  }
+  if(d.measure){
+    // Render warm-up phases first, then the guided measurement block
+    const focusMap={antritt:`<span class="fbadge antritt">ANTRITT · 10m/20m</span>`,maxspeed:`<span class="fbadge maxspeed">MAXIMALSPEED · 50m</span>`,both:`<span class="fbadge antritt">10m</span><span class="fbadge maxspeed">20m · 50m</span>`};
+    let mhtml=`<div class="uhdr"><div class="uico y">${d.ico}</div><div><div class="utitle">${d.type}</div><div class="umeta">${d.meta}</div></div></div><div class="focus-row">${focusMap[d.focus]||''}</div>`;
+    d.phases.forEach(ph=>{
+      mhtml+=`<div class="plbl">${ph.lbl}</div>`;
+      ph.exs.forEach((ex,i)=>{
+        const id=`ex_so_${i}`;
+        mhtml+=`<div class="exrow" id="${id}"><div class="excheck" onclick="toggleDone('${id}')"></div><div class="exinfo"><div class="exname">${ex.n}<span class="solo-tag">SOLO</span></div><div class="exsets">${ex.s}</div></div><div class="exlinks"><a class="exlink yt" href="https://www.youtube.com/results?search_query=${ex.yt}" target="_blank">▶️</a><button class="exlink tip" onclick="showTip('${ex.tip}')">i</button></div></div>`;
+      });
+    });
+    mhtml+=renderMeasureBlock();
+    cont.innerHTML=mhtml;
+    return;
+  }
+  const focusMap={antritt:`<span class="fbadge antritt">ANTRITT · 10m/20m</span>`,maxspeed:`<span class="fbadge maxspeed">MAXIMALSPEED · 50m</span>`,both:`<span class="fbadge antritt">ANTRITT · 10m/20m</span><span class="fbadge maxspeed">MAXIMALSPEED · 50m</span>`};
+  let html=`<div class="uhdr"><div class="uico ${d.col}">${d.ico}</div><div><div class="utitle">${d.type}</div><div class="umeta">${d.meta}</div></div></div>
+  <div class="focus-row">${focusMap[d.focus]||''}</div>`;
+  d.phases.forEach(ph=>{
+    html+=`<div class="plbl">${ph.lbl}</div>`;
+    if(ph.sc){html+=scHTML();return}
+    ph.exs.forEach((ex,i)=>{
+      const id=`ex_${k}_${i}`;
+      html+=`<div class="exrow" id="${id}">
+        <div class="excheck" onclick="toggleDone('${id}')"></div>
+        <div class="exinfo">
+          <div class="exname">${ex.n}<span class="solo-tag">SOLO</span></div>
+          <div class="exsets">${ex.s}</div>
+        </div>
+        <div class="exlinks">
+          <a class="exlink yt" href="https://www.youtube.com/results?search_query=${ex.yt}" target="_blank">▶️</a>
+          <button class="exlink tip" onclick="showTip('${ex.tip}')">i</button>
+        </div>
+      </div>`;
+    });
+  });
+  cont.innerHTML=html;
+}
+
+function toggleDone(id){
+  const r=document.getElementById(id),c=r.querySelector('.excheck');
+  r.classList.toggle('done');c.textContent=r.classList.contains('done')?'✓':'';
+}
+
+// ═══════════════════════════════════════
+//  TABS
+// ═══════════════════════════════════════
+function switchTab(n,el){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');document.getElementById('panel-'+n).classList.add('active');
+}
+function gotoTab(n){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('tab_'+n).classList.add('active');
+  document.getElementById('panel-'+n).classList.add('active');
+}
+
+// ═══════════════════════════════════════
+//  SELF-CHECK FORM + AI ANALYSIS
+// ═══════════════════════════════════════
+const QUESTIONS=[
+  {id:'q_start',lbl:'10m Start: Wie war deine Startposition & erste Schritte?',opts:['Sehr tief, explosiv, kurze Schritte','Mittel – könnte tiefer sein','Zu aufrecht, große Schritte']},
+  {id:'q_aufr',lbl:'20m Aufrichtung: Wann hast du dich aufgerichtet?',opts:['Erst bei ~15–20m (korrekt)','Zu früh bei ~8–10m','Kaum bemerkt / unklar']},
+  {id:'q_arm',lbl:'Armeinsatz: Wie war dein Armeinsatz?',opts:['Kraftvoll, Ellbogen 90°, kein Kreuzen','Mittel – manchmal Kreuzen','Unkoordiniert, Arme kreuzen']},
+  {id:'q_knie',lbl:'Kniehub (20–50m): Wie war dein Kniehub?',opts:['Hoch, Oberschenkel fast waagerecht','Mittel – könnte höher sein','Niedrig, Schritte eher klein']},
+  {id:'q_boden',lbl:'Bodenkontakte: Wie haben sich die Schritte angehört?',opts:['Leise, kurze Kontakte (Vorfuß)','Mittel – einige laute Schritte','Laut, lange Kontakte']},
+  {id:'q_50m',lbl:'50m – 2. Hälfte (30–50m): Was ist passiert?',opts:['Geschwindigkeit gehalten','Leichter Einbruch','Deutlicher Einbruch ab 30m']},
+];
+
+function renderSelfCheckForm(){
+  document.getElementById('selfcheck_form').innerHTML=QUESTIONS.map(q=>`
+    <div style="margin-bottom:14px">
+      <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:6px">${q.lbl}</div>
+      ${q.opts.map((o,i)=>`
+        <label style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--bg);border:1.5px solid var(--border);border-radius:8px;margin-bottom:5px;cursor:pointer;font-size:12px;color:var(--text2)">
+          <input type="radio" name="${q.id}" value="${i}" style="accent-color:var(--y)"> ${o}
+        </label>`).join('')}
+    </div>`).join('');
+}
+
+async function runAnalysis(){
+  const answers={};
+  QUESTIONS.forEach(q=>{
+    const sel=document.querySelector(`input[name="${q.id}"]:checked`);
+    answers[q.lbl]=sel?q.opts[parseInt(sel.value)]:'Nicht beantwortet';
+  });
+  const res=document.getElementById('ai_result');
+  res.style.display='block';
+  res.innerHTML=`<div class="aibox"><div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text2)"><div class="spinner"></div>Analyse läuft...</div></div>`;
+  const woche=document.getElementById('wsel')?.value||1;
+  const playerInfo=CP?`${CP.name}, ${CP.age} Jahre, Woche ${woche}/6`:'13-jähriger Fußballer';
+  const prompt=`Du bist ein erfahrener Sprint- und Athletiktrainer für Jugendfußball.
+
+Spielerprofil: ${playerInfo}
+${CP?.t10?`Aktuell: 10m=${CP.t10}s`:''}${CP?.t20?` 20m=${CP.t20}s`:''}${CP?.t50?` 50m=${CP.t50}s`:''}
+
+Selbst-Einschätzung nach dem Training:
+${Object.entries(answers).map(([k,v])=>`- ${k}: ${v}`).join('\n')}
+
+Aufgabe: Gib eine kurze, konkrete Trainingsanalyse als JSON.
+Antworte NUR als JSON ohne Markdown:
+{"score":72,"staerken":["Stärke 1 konkret auf 10m/20m/50m bezogen","Stärke 2"],"fehler":["Konkreter Fehler 1 mit Bezug auf Zeit","Fehler 2"],"focus_naechste_woche":"Eine klare Priorität für nächste Woche","uebung":"Eine spezifische Übung mit Wiederholungen"}`;
+
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:600,messages:[{role:'user',content:prompt}]})});
+    const data=await r.json();
+    if(data.error)throw new Error(data.error.message);
+    const raw=data.content?.find(b=>b.type==='text')?.text||'';
+    const clean=raw.replace(/```json|```/g,'').trim();
+    const result=JSON.parse(clean);
+    res.innerHTML=renderResult(result,woche);
+    // Save
+    const an=DB.analyses(CP.id);
+    an.unshift({d:ds(),w:woche,score:result.score,focus:result.focus_naechste_woche||''});
+    if(an.length>6)an.pop();
+    DB.savean(CP.id,an);renderAnalysisHistory();
+  }catch(e){
+    res.innerHTML=`<div class="aibox"><div style="color:var(--red);font-size:12px">Fehler: ${e.message}</div></div>`;
+  }
+}
+
+function renderResult(r,w){
+  return`<div class="aibox">
+    <div style="display:flex;align-items:flex-end;gap:10px;margin-bottom:14px">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:52px;color:var(--black);line-height:1">${r.score}<span style="font-size:18px;color:var(--muted)">/100</span></div>
+      <div style="font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;font-weight:700;padding-bottom:8px">Technik-Score · Woche ${w}</div>
+    </div>
+    ${r.staerken?.length?`<div style="font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--green);font-weight:800;margin-bottom:7px">STÄRKEN</div>${r.staerken.map(s=>`<div style="display:flex;gap:8px;margin-bottom:7px"><span>✅</span><div style="font-size:12px;line-height:1.5">${s}</div></div>`).join('')}`:''}
+    ${r.fehler?.length?`<div style="font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--red);font-weight:800;margin:10px 0 7px">ZU VERBESSERN</div>${r.fehler.map(f=>`<div style="display:flex;gap:8px;margin-bottom:7px"><span>🔴</span><div style="font-size:12px;line-height:1.5">${f}</div></div>`).join('')}`:''}
+    ${r.focus_naechste_woche?`<div style="background:var(--yl);border:1.5px solid var(--yb);border-radius:9px;padding:11px;margin-top:10px;font-size:12px;font-weight:700;color:var(--black)">📌 Nächste Woche: ${r.focus_naechste_woche}</div>`:''}
+    ${r.uebung?`<div style="background:var(--bg);border:1.5px solid var(--border);border-radius:9px;padding:11px;margin-top:8px;font-size:12px;color:var(--text2)"><strong style="color:var(--text)">Prioritäts-Übung:</strong> ${r.uebung}</div>`:''}
+  </div>`;
+}
+
+function renderAnalysisHistory(){
+  const cont=document.getElementById('analysis_history');
+  if(!CP){cont.innerHTML='';return}
+  const an=DB.analyses(CP.id);
+  if(!an.length){cont.innerHTML=`<div style="font-size:12px;color:var(--muted);text-align:center;padding:12px">Noch keine Analysen</div>`;return}
+  cont.innerHTML=an.map((e,i)=>`
+    <div class="week-entry" style="display:flex;align-items:center;gap:11px;background:var(--bg);border-radius:10px;padding:11px;margin-bottom:6px;border:1.5px solid var(--border)">
+      <div style="font-size:10px;color:var(--muted);font-weight:700;flex-shrink:0;min-width:48px">Woche ${e.w}<br><span style="font-size:9px">${e.d}</span></div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--black);flex-shrink:0;width:38px">${e.score}</div>
+      <div style="font-size:11px;color:var(--text2);flex:1;line-height:1.4">${e.focus||'–'}</div>
+      <button onclick="delAn(${i})" style="background:none;border:none;color:var(--muted);font-size:15px;cursor:pointer">🗑</button>
+    </div>`).join('');
+}
+function delAn(i){const a=DB.analyses(CP.id);a.splice(i,1);DB.savean(CP.id,a);renderAnalysisHistory()}
+
+// ═══════════════════════════════════════
+//  TIPS
+// ═══════════════════════════════════════
+const TIPS={
+  kniehebelauf:{t:'Kniehebelauf',ex:'Lauf-ABC · Aufwärmen',items:[
+    {k:'Knie bis Hüfthöhe',v:'Oberschenkel mindestens waagerecht – trainiert Kniehub für 20–50m Phase.'},
+    {k:'Standbein vollständig strecken',v:'Vollständiger Abdruck = mehr Vortrieb beim Sprint.'},
+    {k:'Vorfuß-Kontakt',v:'Nur Vorfuß – trainiert direkt die Bodenkontaktzeit beim Sprint.'},
+  ],warn:'Knie nur halb hoch = kein Trainingseffekt für Sprint.',good:'Kniehub überträgt sich 1:1 auf Schrittlänge zwischen 20–50m.',yt:'Kniehebelauf+Sprint+Technik+Jugend'},
+  anfersen:{t:'Anfersen',ex:'Lauf-ABC',items:[
+    {k:'Ferse aktiv zur Gesäßfalte',v:'Nicht passiv – aktiv hochziehen. Trainiert Rückführgeschwindigkeit des Beines.'},
+    {k:'Knie zeigt nach unten',v:'Oberschenkel senkrecht – kein Vorpendeln.'},
+  ],warn:'Knie pendelt vor = das ist Kniehebelauf, nicht Anfersen!',good:'Kürzere Hebel = schnellere Frequenz auf 10–20m.',yt:'Anfersen+Lauf+ABC+Sprint'},
+  skippings:{t:'Skippings',ex:'Lauf-ABC',items:[
+    {k:'Maximale Frequenz',v:'Nervenbahnen für schnelle Beinbewegung trainieren.'},
+    {k:'Nur Vorfuß',v:'Wie beim Sprint – direkter Transfer.'},
+  ],warn:'Ferse setzt auf = Gegenteil von Sprint-Mechanik!',good:'Verbessert Bodenkontaktzeiten zwischen 10–50m.',yt:'Skipping+Frequenz+Sprint'},
+  steigerung:{t:'Steigerungsläufe',ex:'Aufwärmen',items:[
+    {k:'Echte Steigerung',v:'1. Lauf 70%, 2. Lauf 85%, 3. Lauf 95%. Nervensystem aufwärmen.'},
+    {k:'Zwischen Läufen gehen',v:'Locker zurückgehen.'},
+  ],warn:'Direkt 100% ohne Steigerung = erhöhtes Verletzungsrisiko.',good:'Nach Steigerungen bist du technisch optimal auf 10m/20m/50m vorbereitet.',yt:'Steigerungslauf+Sprint+Aufwärmen'},
+  sprint10:{t:'10m Sprint – Start',ex:'Antritt · 10m',items:[
+    {k:'45° Vorlehnen',v:'Körper stark nach vorne. Das ist der Startmotor für die 10m-Zeit.'},
+    {k:'Erste Schritte kurz & explosiv',v:'Keine großen Schritte! Power kommt vor Länge. 3 kurze, schnelle Schritte.'},
+    {k:'Arme aggressiv',v:'Erster Armzug rückwärts treibt das Bein nach vorne.'},
+  ],warn:'Zu frühe Aufrichtung bei 5m kostet 0.1–0.15s auf 10m!',good:'10m-Zeit = reine Startqualität. Hier ist das meiste Potenzial.',yt:'10m+Sprint+Antritt+Startposition+Beschleunigung'},
+  sprint20:{t:'20m Sprint – Übergang',ex:'Beschleunigung · 20m',items:[
+    {k:'Aufrichtung schrittweise 10–20m',v:'Von 45° auf 65°. Nicht abrupt bei 10m aufrichten.'},
+    {k:'Schrittlänge wächst ab 10m',v:'Schritte werden länger, Frequenz hoch.'},
+    {k:'20m-Zeit = Antritt + Übergang',v:'Beides trainieren für maximale Verbesserung.'},
+  ],warn:'Abrupte Aufrichtung bei 8m bremst – kostet 0.1s auf 20m.',good:'20m-Verbesserung kommt am schnellsten durch bessere Startphase.',yt:'20m+Sprint+Aufrichtung+Beschleunigung+Technik'},
+  staffel:{t:'10m–20m Staffel',ex:'Antritt & Übergang',items:[
+    {k:'10m mit voller Kraft',v:'Erster Sprint maximale Intensität.'},
+    {k:'5 Sek Pause dann weiter',v:'Kurze Pause – Muskeln bleiben warm, aber du kannst die Technik halten.'},
+    {k:'Übergang bei 10m bewusst',v:'Fühle, wie sich die Aufrichtung ab 10m anfühlt.'},
+  ],warn:'Kein Sprint aus Ermüdung – wenn Technik nachlässt, Pause verlängern.',good:'Trainiert den 10m–20m Übergang gezielt – wichtigste Zone für 20m-Verbesserung.',yt:'10m+20m+Sprint+Übergang+Antritt+Technik'},
+  flying20:{t:'Flying Sprint 20m+20m',ex:'Maximalspeed · 50m Vorbereitung',items:[
+    {k:'20m Anlauf auf ~85%',v:'Gleichmäßig beschleunigen, dann bei Markierung: Vollgas.'},
+    {k:'Kein Rucken am Wechselpunkt',v:'Fließender Übergang.'},
+    {k:'20m-Zone: Maximalgeschwindigkeit',v:'Hier erreichst du deine Topspeed – wichtig für 50m-Zone.'},
+  ],warn:'3 Min Pause! Ohne Erholung trainierst du Ausdauer, nicht Schnelligkeit.',good:'Flying Sprints sind die direkteste Methode für schnellere 50m-Zeiten.',yt:'Flying+Sprint+20m+Anlauf+Maximalspeed+Technik'},
+  flying30:{t:'Flying Sprint 30m+20m',ex:'Maximalspeed · 50m',items:[
+    {k:'30m Anlauf = echte Topgeschwindigkeit',v:'Du erreichst deine absolute Maximalgeschwindigkeit.'},
+    {k:'20m-Messzone',v:'Hier deine Zeit notieren und mit Vorwoche vergleichen.'},
+    {k:'Kniehub jetzt maximieren',v:'Bei Maximalspeed sollte Oberschenkel fast waagerecht sein.'},
+  ],warn:'4 Min Pause. Bei Müdigkeit sofort aufhören.',good:'Direkter Transfer auf deine 50m-Zeit – die wichtigste Übung für Maximalspeed.',yt:'Flying+Sprint+30m+Anlauf+Maximalspeed+Training'},
+  sprint50:{t:'50m Durchsprint',ex:'Maximalspeed · Zeitmessung',items:[
+    {k:'Phaseneinteilung',v:'0–10m Antritt · 10–20m Übergang · 20–50m Maximalspeed halten.'},
+    {k:'30–50m: Geschwindigkeit halten',v:'Letzten 20m sind schwieriger als sie zu erreichen. Entspannte Technik!'},
+    {k:'Kiefer locker ab 20m',v:'Verkrampfung ab hier kostet messbar Tempo.'},
+  ],warn:'Zu aggressiver Start → Einbruch nach 25m. Erste 10m kontrolliert!',good:'50m-Zeit = Summe aus Antritt + Übergang + Maximalspeed. Alle 3 Phasen trainieren.',yt:'50m+Sprint+Phaseneinteilung+Maximalgeschwindigkeit+Technik'},
+  ttest:{t:'T-Test Solo',ex:'Agilität',items:[
+    {k:'Aufbau: T-Form',v:'4 Markierungen: Startpunkt, 5m davor, dann je 2.5m links und rechts.'},
+    {k:'Sprint vor, Seitschritt links, Seitschritt rechts, rückwärts zurück',v:'Immer ohne Überkreuzen.'},
+    {k:'Tiefer Schwerpunkt',v:'Bei jedem Richtungswechsel tief bleiben.'},
+  ],warn:'Überkreuzen beim Seitschritt = disqualifiziert im echten Test.',good:'Vollständig solo trainierbar. Ziel unter 9 Sek.',yt:'T-Test+Agility+Solo+Fussball+Training'},
+  shuttle:{t:'5-10-5 Shuttle',ex:'Agilität',items:[
+    {k:'Mitte–5m rechts–10m links–5m zurück',v:'Hände berühren Linie bei jedem Umkehren.'},
+    {k:'Außenfuß bremst beim Umkehren',v:'Nicht mit beiden Füßen gleichzeitig stoppen.'},
+  ],warn:'Aufrecht ins Umkehren = verlangsamte Reaktion.',good:'Verbessert Stop-and-Go – spielrelevanteste Bewegung.',yt:'5-10-5+Shuttle+Run+Agility+Solo'},
+  riwechsel:{t:'Richtungswechsel 45°',ex:'Agilität',items:[
+    {k:'5m Sprint, dann 45° abstoppen',v:'Außenfuß bremst – nach innen drehen.'},
+    {k:'Erster Schritt nach Wechsel: kurz & explosiv',v:'Wie 10m-Start neu.'},
+  ],warn:'Viele verlieren beim Wechsel 0.3–0.5s durch schlechten Fuß-Einsatz.',good:'Stop-and-Go = häufigste Sprintsituation im Fußball.',yt:'Richtungswechsel+Sprint+Cut+Solo+Fussball'},
+  slides:{t:'Defensive Slide Steps',ex:'Schwerpunkt',items:[
+    {k:'Tiefer Schwerpunkt',v:'Oberschenkel fast parallel zum Boden.'},
+    {k:'Nicht überkreuzen',v:'Füße gleiten – nie kreuzen.'},
+  ],warn:'Zu aufrecht = langsame Reaktion auf Gegner.',good:'Direkter Transfer auf Zweikampf und Pressing.',yt:'Defensive+Slides+Football+Solo+Low+Centre'},
+  sqwalk:{t:'Squat Walk',ex:'Schwerpunkt',items:[
+    {k:'Squat-Position halten',v:'Oberschenkel parallel, kleiner Schritt ohne aufstehen.'},
+    {k:'Ohne Theraband genau so effektiv',v:'Körpergewicht reicht komplett.'},
+  ],warn:'Aufrecht werden = Übung falsch.',good:'Trainiert Gesäß & Oberschenkel in spielspezifischer Position.',yt:'Squat+Walk+Lateral+Football'},
+  legswing:{t:'Beinschwingen',ex:'Beweglichkeit',items:[
+    {k:'Locker pendeln',v:'Nicht aktiv schwingen – Gravitation arbeiten lassen.'},
+    {k:'Vor-Rück und Seitlich',v:'Beide Bewegungsebenen.'},
+  ],warn:'Nicht reißen – langsam und locker.',good:'Bereitet Hüfte auf Sprint-Kniehub vor.',yt:'Leg+Swings+Warm+Up+Sprint+Mobility'},
+  weltrekord:{t:'Weltrekordstretch',ex:'Beweglichkeit',items:[
+    {k:'Ausfallschritt + Ellbogen zum Boden',v:'Gleichseitiger Arm geht zum Boden.'},
+    {k:'Dann Hand oben öffnen',v:'Thoraxrotation – Auge folgt der Hand.'},
+  ],warn:'Eine der besten Einzel-Übungen für Sprint-Mobilität.',good:'Verbessert Hüftbeuger + Oberkörperrotation gleichzeitig.',yt:'World+Record+Stretch+Mobility+Sport'},
+  hip90:{t:'90-90 Hüftstretch',ex:'Beweglichkeit',items:[
+    {k:'Beide Beine 90°',v:'Vorne außen, hinten innen.'},
+    {k:'60 Sek je Seite',v:'Eingeschränkte Hüftrotation = eingeschränkter Kniehub.'},
+  ],warn:'Schmerzen = Intensität reduzieren.',good:'Verbessert direkt den Kniehub auf 20–50m.',yt:'90-90+Hip+Mobility+Football+Stretch'},
+  squat:{t:'Kniebeugen',ex:'Kraft · Antritt',items:[
+    {k:'Knie folgen Zehen',v:'Nie nach innen einknicken.'},
+    {k:'Explosiv aufstehen',v:'SCHNELL hoch – das trainiert Antritt-Explosivität für 10m.'},
+  ],warn:'Für 13-Jährige: erst mit Körpergewicht.',good:'Stärkere Kniebeugen = schnellere 10m-Zeit.',yt:'Kniebeugen+Technik+Jugend+Anfänger'},
+  deadlift:{t:'Kreuzheben / RDL',ex:'Kraft · Maximalspeed',items:[
+    {k:'Rücken IMMER neutral',v:'Kein runder Rücken!'},
+    {k:'Hintere Kette',v:'Ischiokrurale + Gesäß = Sprintmotor für 20–50m.'},
+  ],warn:'Technik vor Gewicht. Immer.',good:'Starke hintere Kette = besserer Kniehub = schnellere 50m.',yt:'Kreuzheben+RDL+Technik+Jugend'},
+  lunge:{t:'Ausfallschritte',ex:'Kraft',items:[
+    {k:'Explosiv aufstehen',v:'Simuliert Sprintabdruck auf 10m.'},
+    {k:'Knie über dem Fuß',v:'Kein Übertreten.'},
+  ],warn:'Gleicht Ungleichgewichte aus – wichtig für symmetrischen Antritt.',good:'Verbessert Gleichgewicht beim Abdruck auf 10m.',yt:'Ausfallschritte+Lunge+Sprint'},
+  wade:{t:'Wadenheben',ex:'Kraft · Abdruck',items:[
+    {k:'Volle Amplitude',v:'Tief runter, ganz oben.'},
+    {k:'Einbeinig',v:'Doppelter Trainingsreiz.'},
+  ],warn:'Wadenmuskulatur = letzter Abdruck beim Sprint auf allen Distanzen.',good:'Waden produzieren ~50% Antriebskraft beim Vorfußlanding.',yt:'Wadenheben+einbeinig+Sprint'},
+  boxjump:{t:'Box Jump',ex:'Plyometrie · Antritt',items:[
+    {k:'Geschwindigkeit, nicht Höhe',v:'Ziel: schnellste Abdruckzeit – 10m-Antritt trainieren.'},
+    {k:'Soft Landing',v:'Knie federt ab.'},
+  ],warn:'30–45 Sek Pause zwischen Sprüngen.',good:'Verbessert Rate of Force Development – direkt für 10m-Start.',yt:'Box+Jump+Kastensprung+Plyometrie+Jugend'},
+  wechselsprung:{t:'Wechselsprünge',ex:'Plyometrie · Schrittlänge',items:[
+    {k:'Von einem Fuß abstoßen',v:'Genau wie im Sprint.'},
+    {k:'Maximale Weite',v:'Jeder Absprung mit voller Kraft.'},
+  ],warn:'Verbessern Schrittlänge auf 20–50m.',good:'Mehr Schrittlänge = schnellere 50m ohne mehr Frequenz.',yt:'Wechselsprünge+Sprungkraft+Fussball'},
+  bounds:{t:'Sprungläufe (Bounding)',ex:'Plyometrie · 50m',items:[
+    {k:'Weite > Frequenz',v:'Jeder Schritt ist ein weiter Sprung.'},
+    {k:'Voller Abdruck',v:'Kein Durchschlendern.'},
+  ],warn:'20m reichen.',good:'Direkteste Methode für mehr Schrittlänge auf 20–50m.',yt:'Bounding+Sprungläufe+Sprint+Plyometrie'},
+  aufwaermen_kraft:{t:'Aufwärmen Kraft',ex:'Vorbereitung',items:[
+    {k:'Gelenke mobilisieren',v:'Hüfte, Knie, Sprunggelenke.'},
+    {k:'Herzfrequenz rauf',v:'Hampelmann + Kniebeugen.'},
+  ],warn:'Kein Krafttraining ohne Aufwärmen!',good:'Warme Muskeln 15–20% leistungsfähiger.',yt:'Dynamic+Warm+Up+Krafttraining+Jugend'},
+};
+
+function showTip(key){
+  const t=TIPS[key];if(!t)return;
+  document.getElementById('tip_title').textContent=t.t;
+  document.getElementById('tip_ex').textContent=t.ex;
+  let html=t.items.map(i=>`<div class="titem"><div class="tdot"></div><div class="ttext"><span class="tkey">${i.k}:</span> ${i.v}</div></div>`).join('');
+  if(t.warn) html+=`<div class="twarn">⚠️ ${t.warn}</div>`;
+  if(t.good) html+=`<div class="tgood">✅ ${t.good}</div>`;
+  if(t.yt) html+=`<a class="ytbtn" style="text-decoration:none" href="https://www.youtube.com/results?search_query=${t.yt}" target="_blank"><span class="ytbadge">YT</span>Video zu: ${t.t}</a>`;
+  document.getElementById('tip_content').innerHTML=html;
+  document.getElementById('tip_ov').classList.add('open');
+}
+function closeTip(e){if(!e||e.target.id==='tip_ov')document.getElementById('tip_ov').classList.remove('open')}
+
+// ═══════════════════════════════════════
+//  MEASURE BLOCK (Sunday guided flow)
+// ═══════════════════════════════════════
+function renderMeasureBlock(){
+  const p=CP;
+  const dists=[
+    {key:'10',lbl:'10m Sprint',hint:'Tief starten · Arme explosiv · 3 Versuche',min:1.4,max:3.5},
+    {key:'20',lbl:'20m Sprint',hint:'Aufrichtung bei 10m · 3 Versuche',min:2.2,max:5.0},
+    {key:'50',lbl:'50m Sprint',hint:'Phaseneinteilung · letzten 20m halten · 3 Versuche',min:5.5,max:12},
+  ];
+  let html=`<div class="plbl">Zeitmessung · 3 Versuche · Beste Zeit speichern</div>
+  <div class="icard" style="background:var(--yl);border-color:var(--yb)">
+    <div style="font-size:12px;font-weight:700;color:var(--black);margin-bottom:4px">📋 Ablauf heute</div>
+    <div style="font-size:11px;color:var(--text2);line-height:1.7">1. Aufwärmen oben abhaken<br>2. Pro Distanz: 3 Versuche · 5 Min Pause dazwischen<br>3. Beste Zeit unten eintragen und speichern<br>4. Die App vergleicht automatisch mit deinem Verlauf</div>
+  </div>`;
+  dists.forEach(({key,lbl,hint,min,max})=>{
+    const prev=(p&&p[`t${key}`])?p[`t${key}`]:null;
+    const times=(p&&p[`times${key}`])||[];
+    const best=times.length?Math.min(...times.map(t=>t.v)):null;
+    html+=`<div class="icard" style="margin-bottom:8px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800">${lbl}</div>
+        ${best?`<div style="font-size:11px;color:var(--muted)">Bestzeit: <strong style="color:var(--black)">${best}s</strong></div>`:''}
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:10px">💡 ${hint}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:6px;align-items:flex-end">
+        <div><div style="font-size:10px;font-weight:700;color:var(--text2);margin-bottom:3px">Versuch 1</div><input type="number" id="ms_${key}_1" placeholder="${prev||''}" step="0.01" min="${min}" max="${max}" oninput="msPickBest('${key}')" style="width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:8px;font-size:16px;padding:8px 6px;font-family:'Barlow',sans-serif;font-weight:700;text-align:center;outline:none"></div>
+        <div><div style="font-size:10px;font-weight:700;color:var(--text2);margin-bottom:3px">Versuch 2</div><input type="number" id="ms_${key}_2" placeholder="" step="0.01" min="${min}" max="${max}" oninput="msPickBest('${key}')" style="width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:8px;font-size:16px;padding:8px 6px;font-family:'Barlow',sans-serif;font-weight:700;text-align:center;outline:none"></div>
+        <div><div style="font-size:10px;font-weight:700;color:var(--text2);margin-bottom:3px">Versuch 3</div><input type="number" id="ms_${key}_3" placeholder="" step="0.01" min="${min}" max="${max}" oninput="msPickBest('${key}')" style="width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:8px;font-size:16px;padding:8px 6px;font-family:'Barlow',sans-serif;font-weight:700;text-align:center;outline:none"></div>
+        <div><div style="font-size:10px;font-weight:800;color:var(--green);margin-bottom:3px">→ Beste</div><div id="ms_${key}_best" style="background:var(--black);border-radius:8px;padding:9px 6px;font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--y);text-align:center;min-height:38px">–</div></div>
+      </div>
+    </div>`;
+  });
+  html+=`<button onclick="msSaveAll()" style="width:100%;background:var(--black);color:var(--y);border:none;border-radius:11px;font-family:'Barlow',sans-serif;font-weight:800;font-size:15px;padding:14px;cursor:pointer;margin-top:4px;letter-spacing:.3px">✓ Beste Zeiten speichern & Verlauf aktualisieren</button>
+  <div id="ms_feedback" style="margin-top:10px"></div>`;
+  return html;
+}
+
+function msPickBest(key){
+  const vals=[1,2,3].map(i=>{const v=parseFloat(document.getElementById(`ms_${key}_${i}`)?.value);return isNaN(v)?null:v}).filter(v=>v!==null);
+  const best=vals.length?Math.min(...vals):null;
+  const el=document.getElementById(`ms_${key}_best`);
+  if(el) el.textContent=best?best+'s':'–';
+}
+
+function msSaveAll(){
+  const p=DB.get(CP.id);const today=ds();let saved=0,fb=[];
+  [['10',1.4,3.5],['20',2.2,5.0],['50',5.5,12]].forEach(([key,min,max])=>{
+    const vals=[1,2,3].map(i=>{const v=parseFloat(document.getElementById(`ms_${key}_${i}`)?.value);return isNaN(v)?null:v}).filter(v=>v!==null&&v>=min&&v<=max);
+    if(!vals.length)return;
+    const best=Math.min(...vals);
+    const prev=p[`t${key}`];
+    p[`times${key}`]=p[`times${key}`]||[];
+    p[`times${key}`].push({d:today,v:best});
+    p[`t${key}`]=best; saved++;
+    const delta=prev?(best-prev).toFixed(2):null;
+    if(delta&&delta<0) fb.push(`✅ ${key}m: ${best}s (${delta}s – schneller!)`);
+    else if(delta&&delta>0) fb.push(`📊 ${key}m: ${best}s (+${delta}s)`);
+    else fb.push(`📊 ${key}m: ${best}s (1. Messung)`);
+  });
+  if(!saved){alert('Bitte mindestens einen Versuch eingeben.');return}
+  DB.save(p);CP=p;renderHdr(p);renderYouMarkers(p);
+  document.getElementById('ms_feedback').innerHTML=`<div style="background:#F1F8E9;border:1.5px solid #A5D6A7;border-radius:10px;padding:12px;font-size:13px;line-height:1.8">${fb.join('<br>')}<br><strong style="color:var(--green)">Gespeichert! Verlauf im Header aktualisiert.</strong></div>`;
+}
+
+// ═══════════════════════════════════════
+//  UTILS
+// ═══════════════════════════════════════
+function ds(){ return new Date().toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit',year:'2-digit'}) }
+
+// ═══════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════
+(function(){
+  // Always show login screen first – never auto-skip it
+  // Just pre-fill fields if a player was active before
+  renderEP();
+  const id=DB.cid();
+  if(id){
+    const p=DB.get(id);
+    if(p){
+      document.getElementById('l_name').value=p.name||'';
+      document.getElementById('l_age').value=p.age||13;
+      if(p.height) document.getElementById('l_h').value=p.height;
+      if(p.weight) document.getElementById('l_w').value=p.weight;
+      if(p.t10) document.getElementById('l_t10').value=p.t10;
+      if(p.t20) document.getElementById('l_t20').value=p.t20;
+      if(p.t50) document.getElementById('l_t50').value=p.t50;
+      calcPrev();
+    }
+  }
+})();
+</script>
+</body>
+</html>
